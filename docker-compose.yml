@@ -1,0 +1,17 @@
+version: '3'
+services:
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: owasp-zap
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+    command: zap-webswing.sh -config webswing.authmethod=none -config api.disablekey=true
+    volumes:
+      - ./zap/wrk:/zap/wrk:rw
+    networks:
+      - zap-net
+
+networks:
+  zap-net:
+    driver: bridge
