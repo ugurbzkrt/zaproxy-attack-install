@@ -1,0 +1,24 @@
+trigger:
+- none
+
+pool:
+  name: 'private-pool'
+  demands:
+    - agent.name -equals zaproxy-*
+
+steps:
+
+- task: OwaspZapScan@0
+  inputs:
+    ZapApiUrl: 'http://$(HOST):$(PORT)'
+    ZapApiKey: '$(APIKEY)'
+    TargetUrl: 'https://preprod.example.io'
+    ExecuteAjaxSpiderScan: true
+    ExecuteSpiderScan: true
+    ExecuteActiveScan: true
+    ReportFileName: 'OWASP-ZAP-Report-$(Build.BuildId)'
+
+- task: publishhtmlreport@1
+  inputs:
+    htmlType: 'genericHTML'
+    htmlPath: '$(System.DefaultWorkingDirectory)/OWASP-ZAP-Report-$(Build.BuildId).html'
